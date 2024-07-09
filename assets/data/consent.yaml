@@ -1,0 +1,5 @@
+items:
+  - title: Functional
+    description: We don't want to track you! However, there are links on our website to external pages. This text is a test!
+    is_functional: true
+    script_file: tba.js
