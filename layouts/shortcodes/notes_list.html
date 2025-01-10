@@ -1,0 +1,27 @@
+{{ $file := .Get "file" }}
+{{ $filePath := printf "content/shared/%s.md" $file }}
+{{ $sharedContent := readFile $filePath }}
+
+{{ $items_top_str := .Get "items_top" }}
+{{ $items_top := split $items_top_str ";" }}
+
+{{ $items_bottom_str := .Get "items_bottom" }}
+{{ $items_bottom := split $items_bottom_str ";" }}
+
+<ul>
+    {{ range $items_top }}
+        {{ if ne . "" }}
+        <li>{{ . | markdownify }}</li>
+        {{ end }}
+    {{ end }}
+
+    {{ range split $sharedContent "\n" }}
+    <li>{{ . | markdownify }}</li>
+    {{ end }}
+
+    {{ range $items_bottom }}
+        {{ if ne . "" }}
+        <li>{{ . | markdownify }}</li>
+        {{ end }}
+    {{ end }}
+</ul>
