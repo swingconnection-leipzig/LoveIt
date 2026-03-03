@@ -1,6 +1,10 @@
 {{ $file := .Get "file" }}
-{{ $filePath := printf "content/shared/%s.md" $file }}
-{{ $sharedContent := readFile $filePath }}
+{{ $lang := .Page.Language.Lang }}
+{{ $langFilePath := printf "content/shared/%s.%s.md" $file $lang }}
+{{ $sharedContent := readFile $langFilePath }}
+{{ if eq $sharedContent "" }}
+    {{ $sharedContent = readFile (printf "content/shared/%s.md" $file) }}
+{{ end }}
 
 {{ $items_top_str := .Get "items_top" }}
 {{ $items_top := split $items_top_str ";" }}
