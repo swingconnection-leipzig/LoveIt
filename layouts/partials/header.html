@@ -173,6 +173,14 @@
                     <a class="menu-item" href="{{ $url }}" title="{{ .Title }}"{{ if (urls.Parse $url).Host }} rel="noopener noreffer" target="_blank"{{ end }}>
                         {{- .Pre | safeHTML }}{{ .Name }}{{ .Post | safeHTML -}}
                     </a>
+                    {{- if .HasChildren -}}
+                        {{- range .Children -}}
+                            {{- $childUrl := .URL | relLangURL -}}
+                            <a class="menu-item menu-item-child" href="{{ $childUrl }}" title="{{ .Title }}"{{ if (urls.Parse $childUrl).Host }} rel="noopener noreffer" target="_blank"{{ end }}>
+                                {{- .Pre | safeHTML }}{{ .Name }}{{ .Post | safeHTML -}}
+                            </a>
+                        {{- end -}}
+                    {{- end -}}
                 {{ else }}
                     <a class="menu-item inline" href="{{ $url }}" title="{{ .Title }}"{{ if (urls.Parse $url).Host }} rel="noopener noreffer" target="_blank"{{ end }}>
                         {{- .Pre | safeHTML }}{{ .Name }}{{ .Post | safeHTML -}}

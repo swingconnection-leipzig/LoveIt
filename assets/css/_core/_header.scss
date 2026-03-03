@@ -365,6 +365,11 @@ div.sub-menu-item {
         line-height: 2.5rem;
         text-align: left;
         padding-left: 20px;
+
+        &.menu-item-child {
+          padding-left: 40px;
+          font-size: 0.9em;
+        }
       }
 
       &.active {
