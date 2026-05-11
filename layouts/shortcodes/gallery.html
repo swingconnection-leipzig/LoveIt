@@ -1,0 +1,61 @@
+{{- $images := split (.Get "images") ";" -}}
+{{- $captionsRaw := default "" (.Get "captions") -}}
+{{- $captions := split $captionsRaw ";" -}}
+{{- $id := printf "sc-gallery-%d" .Ordinal -}}
+{{- $count := 0 -}}
+{{- range $images -}}{{- if ne (trim . " ") "" -}}{{- $count = add $count 1 -}}{{- end -}}{{- end -}}
+
+<div class="sc-gallery" id="{{ $id }}">
+  <div class="sc-gallery__stage">
+    {{- range $i, $img := $images -}}
+      {{- $img = trim $img " " -}}
+      {{- if ne $img "" -}}
+        {{- $caption := trim (default "" (index $captions $i)) " " -}}
+        <figure class="sc-gallery__slide" data-caption="{{ $caption }}">
+          <img
+            src="{{ $img }}"
+            alt="{{ $caption }}"
+            loading="{{ if eq $i 0 }}eager{{ else }}lazy{{ end }}"
+            class="sc-gallery__img"
+          >
+        </figure>
+      {{- end -}}
+    {{- end -}}
+    {{- if gt $count 1 -}}
+    <button class="sc-gallery__btn sc-gallery__btn--prev" aria-label="Vorheriges Bild">&#8249;</button>
+    <button class="sc-gallery__btn sc-gallery__btn--next" aria-label="Nächstes Bild">&#8250;</button>
+    {{- end -}}
+  </div>
+  <div class="sc-gallery__footer">
+    <span class="sc-gallery__caption"></span>
+    {{- if gt $count 1 -}}
+    <span class="sc-gallery__counter"></span>
+    {{- end -}}
+  </div>
+</div>
+
+<script>
+(function () {
+  var el = document.getElementById('{{ $id }}');
+  var slides = Array.from(el.querySelectorAll('.sc-gallery__slide'));
+  if (!slides.length) return;
+  var captionEl = el.querySelector('.sc-gallery__caption');
+  var counterEl = el.querySelector('.sc-gallery__counter');
+  var current = 0;
+
+  function show(n) {
+    slides[current].classList.remove('sc-gallery__slide--active');
+    current = (n + slides.length) % slides.length;
+    slides[current].classList.add('sc-gallery__slide--active');
+    if (captionEl) captionEl.textContent = slides[current].dataset.caption || '';
+    if (counterEl) counterEl.textContent = (current + 1) + ' / ' + slides.length;
+  }
+
+  var prev = el.querySelector('.sc-gallery__btn--prev');
+  var next = el.querySelector('.sc-gallery__btn--next');
+  if (prev) prev.addEventListener('click', function () { show(current - 1); });
+  if (next) next.addEventListener('click', function () { show(current + 1); });
+
+  show(0);
+})();
+</script>
